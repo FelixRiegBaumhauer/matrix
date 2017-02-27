@@ -11,6 +11,15 @@ Returns:
 print the matrix
 */
 void print_matrix(struct matrix *m) {
+  int i;
+  int j;
+  for(i=0; i<m->rows; i++){
+    for(j=0; j<m->cols; j++){
+      printf(" %f ", m->m[i][j]);
+    }
+    printf("\n");
+  }
+  printf("\n");
 }
 
 /*-------------- void ident() --------------
@@ -19,6 +28,18 @@ Returns:
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
+  int i;
+  int j;
+  for(i=0; i<m->rows; i++){
+    for(j=0; j<m->cols; j++){
+      if(i==j){
+	m->m[i][j] = 1;
+      }
+      else{
+	m->m[i][j] = 0;
+      }
+    }
+  }
 }
 
 
@@ -29,6 +50,13 @@ Returns:
 multiply each element of m by x
 */
 void scalar_mult(double x, struct matrix *m) {
+  int i;
+  int j;
+  for(i=0; i<m->rows; i++){
+    for(j=0; j<m->cols; j++){
+      m->m[i][j] = x * m->m[i][j];
+    }
+  }
 }
 
 
@@ -39,6 +67,32 @@ Returns:
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
+  //a new matrix to hold the result while we do the multiplcation
+  struct matrix *hold;
+  hold = new_matrix(b->rows, b->cols);
+  
+  //a quick test
+  if(a->cols != b->rows){
+    return;
+  }
+  
+  int i;
+  int j;
+  for(i=0; i<a->rows; i++){
+    for(j=0; j<b->cols; j++){
+
+      //LETS FIND THE DOT PRODUCT
+      int k;
+      float dProd = 0;
+      for(k=0; k<a->cols; k++){
+	float ans = (a->m[i][k] * b->m[k][j]);
+	dProd += ans;
+      }
+      
+      hold->m[i][j] = dProd;
+    }
+  }
+  copy_matrix(hold, b);//replace b with hold
 }
 
 
